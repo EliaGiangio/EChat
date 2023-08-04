@@ -2,7 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebas
 import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
 import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
 import { signOut } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
-import { getDatabase, ref, set, update } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-database.js";
+import { getDatabase, ref, set, update, child, get, onValue } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-database.js";
 
 
 const firebaseConfig = {
@@ -19,6 +19,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const database = getDatabase(app);
+const usersRef = ref(database, 'users');
+let currentUser;
+
 
 function validate_email(input) {
     var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -34,6 +37,7 @@ function validate_password(input) {
 
 }
 
+//sign up function
 submitData.addEventListener('click', (event) => {
     event.preventDefault(); //this is used to prevent the "Submit" action to have it's normal behaviour and redirect to the url with the credentials inserted
     const email = document.getElementById('new-email-field').value;
@@ -60,6 +64,7 @@ submitData.addEventListener('click', (event) => {
     }
 });
 
+//login function
 loginUser.addEventListener('click', (event) => {
     event.preventDefault();
     const email = document.getElementById('email-field').value;
@@ -80,14 +85,49 @@ loginUser.addEventListener('click', (event) => {
 
 });
 
-/*
+
 signOutButton.addEventListener('click', (event) => {
     event.preventDefault();
     signOut(auth).then(() => {
         alert("You have been successfully signed out!")
-      }).catch((error) => {
+    }).catch((error) => {
         alert("something went wrong")
-      });
+    });
 })
 
-*/
+
+
+auth.onAuthStateChanged((user) => {
+    if (user) {
+        currentUser = user.email
+        document.getElementById("current-user").style.display = ""
+        document.getElementById("registration").style.display = "none"
+        document.getElementById("login").style.display = "none"
+        console.log(currentUser + " is logged in");
+    } else {
+        document.getElementById("current-user").style.display = "none"
+        document.getElementById("registration").style.display = ""
+        document.getElementById("login").style.display = ""
+        console.log("User is logged out");
+    }
+});
+
+
+let usersList = document.getElementById('users-list')
+let emails;
+onValue(usersRef, (snapshot) => {
+    const userData = snapshot.val();
+    emails = Object.values(userData).map((user) => user.email)
+    for (let i = 0; i < emails.length; i++) {
+        let emailsList = document.createElement('li')
+        let emailName = document.createElement('p')
+        if (emails[i] != currentUser) {
+            emailName.textContent = emails[i]
+        } else {
+            emailsList.style.display = "none"
+        }
+        usersList.appendChild(emailsList)
+        emailsList.appendChild(emailName)
+    }
+});
+
