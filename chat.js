@@ -16,12 +16,17 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
+let currentUser;
+let currentChat;
+let chatId;
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const database = getDatabase(app);
 const usersRef = ref(database, 'users');
 const chatsRef = ref(database, 'chats');
-let currentUser;
+let usersList = document.getElementById('users-list')
+
+
 
 
 function validate_email(input) {
@@ -119,7 +124,6 @@ auth.onAuthStateChanged((user) => {
 
 
 
-let usersList = document.getElementById('users-list')
 
 onValue(usersRef, (snapshot) => {
     const userData = snapshot.val();
@@ -157,20 +161,54 @@ function chatExists(chatNumber) {
 }
 
 
+
 function createChat(secondUser) {
     let userOne = auth.currentUser.email
     let userTwo = secondUser.email
-    let chatId = auth.currentUser.uid + secondUser.user_id
+    chatId = auth.currentUser.uid + secondUser.user_id
     chatExists(chatId).then((exists) => {
-        if (exists === true) { alert("CHAT ALREADY EXISTS") }
+        if (exists === true) { }
         else {
             set(ref(database, 'chats/' + chatId), {
                 firstUser: userOne,
-                secondUser: userTwo
+                secondUser: userTwo,
+                messages: {}
             });
             alert("NEW CHAT STARTED")
         }
     });
-
-
+    document.getElementById("chat-area").style.display = ""
+    currentChat = chatId;
+    const conversationRef = ref(database, 'chats/' + currentChat + "/messages")
+    onValue(conversationRef, (snapshot)=> {
+        const coversationHistory = snapshot.val();
+        for (const chatId in coversationHistory){
+            const messages = coversationHistory[chatId];
+            const chatList = document.getElementById('chat-list');
+            const messageItems = document.createElement('li');
+            chatList.appendChild(messageItems)
+            messageItems.textContent = messages.content
+            if(messages.sender == currentUser){
+                messageItems.style.color = "red"
+            }
+        }
+        let messagesContainer = document.getElementById('messages');
+        console.log(coversationHistory)
+    })
 }
+
+function newMessage(){
+    let contentTest = document.getElementById("text-description").value
+    let senderTest = auth.currentUser.email
+    let messageId = Date.now()
+    set(ref(database, 'chats/' + chatId + '/messages/' + messageId), {
+        sender: senderTest,
+        content: contentTest,
+        send_time: Date.now()
+    });
+    alert("NEW message generated")
+}
+
+let messageButton = document.getElementById('generate-message')
+messageButton.addEventListener('click', function(){newMessage()})
+
