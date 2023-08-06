@@ -20,6 +20,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const database = getDatabase(app);
 const usersRef = ref(database, 'users');
+const chatsRef = ref(database, 'chats');
 let currentUser;
 
 
@@ -37,6 +38,8 @@ function validate_password(input) {
 
 }
 
+
+
 //sign up function
 submitData.addEventListener('click', (event) => {
     event.preventDefault(); //this is used to prevent the "Submit" action to have it's normal behaviour and redirect to the url with the credentials inserted
@@ -49,8 +52,10 @@ submitData.addEventListener('click', (event) => {
             .then((userCredential) => {
                 const user = userCredential.user;
                 set(ref(database, 'users/' + user.uid), {
+                    user_id: user.uid,
                     email: email,
                     password: password,
+                    chatId: Math.random().toString(36).slice(2),
                     last_login: Date.now()
                 });
                 alert("User created correctly")
@@ -113,21 +118,59 @@ auth.onAuthStateChanged((user) => {
 });
 
 
+
 let usersList = document.getElementById('users-list')
-let emails;
+
 onValue(usersRef, (snapshot) => {
     const userData = snapshot.val();
-    emails = Object.values(userData).map((user) => user.email)
-    for (let i = 0; i < emails.length; i++) {
+    for (const usersId in userData){
+        const otherUser = userData[usersId]
         let emailsList = document.createElement('li')
-        let emailName = document.createElement('p')
-        if (emails[i] != currentUser) {
-            emailName.textContent = emails[i]
+        let emailName = document.createElement('button')
+        if (otherUser.email != currentUser) {
+            emailName.textContent = otherUser.email
         } else {
             emailsList.style.display = "none"
         }
         usersList.appendChild(emailsList)
         emailsList.appendChild(emailName)
+        emailName.classList.add('user-chat')
+        emailName.addEventListener('click', function (){createChat(otherUser)});
     }
 });
 
+
+
+//here the in the secon line i use directly return because get is asynchronous 
+function chatExists(chatNumber) {
+    return get(chatsRef)
+        .then((snapshot) => {
+            if (snapshot.exists()) {
+                const chatsData = snapshot.val();
+                return chatNumber in chatsData;
+            }
+            return false;
+        })
+        .catch((error) => {
+            console.error("Error fetching data:", error);
+        });
+}
+
+
+function createChat(secondUser) {
+    let userOne = auth.currentUser.email
+    let userTwo = secondUser.email
+    let chatId = auth.currentUser.uid + secondUser.user_id
+    chatExists(chatId).then((exists) => {
+        if (exists === true) { alert("CHAT ALREADY EXISTS") }
+        else {
+            set(ref(database, 'chats/' + chatId), {
+                firstUser: userOne,
+                secondUser: userTwo
+            });
+            alert("NEW CHAT STARTED")
+        }
+    });
+
+
+}
