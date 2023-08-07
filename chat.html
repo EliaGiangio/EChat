@@ -32,22 +32,23 @@
     </div>
     <div id="current-user">
         <div id="other-users-div">
-            <ul id="users-list"></ul>
+            <ul id="users-list" style="list-style-type: none"></ul>
         </div>
-        <div id="chat-area" style="display: none;">
+        <div id="chat-area">
             <div id="messages">
-                <ul id="chat-list"></ul>
+                <ul id="chat-list" style="list-style-type: none"></ul>
             </div>
-        <div id="new-message-field">
-            <form>
-                <input type="text" id="text-description" name="text-description"><br>
-                <button id="generate-message" >GENERATE MESSAGE</button>
-            </form>
+            <div id="new-message-field">
+                <form>
+                    <input type="text" id="text-description" name="text-description" required><br>
+                    <button id="generate-message" style="font-weight: bolder;
+                    width: 30px;" >></button>
+                </form>
+            </div>
         </div>
-        </div>
-        <div>
-            <button id="signOutButton" name="signOutButton">Sign out</button>
-        </div>
+    </div>
+    <div>
+        <button id="signOutButton" name="signOutButton">Sign out</button>
     </div>
 
     <script type="module" src="chat.js"></script>

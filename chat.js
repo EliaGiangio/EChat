@@ -139,7 +139,9 @@ onValue(usersRef, (snapshot) => {
         usersList.appendChild(emailsList)
         emailsList.appendChild(emailName)
         emailName.classList.add('user-chat')
-        emailName.addEventListener('click', function (){createChat(otherUser)});
+        emailName.addEventListener('click', function (event){
+            event.preventDefault();
+            createChat(otherUser)});
     }
 });
 
@@ -163,11 +165,13 @@ function chatExists(chatNumber) {
 
 
 function createChat(secondUser) {
+    document.getElementById("chat-list").innerHTML = "";
     let userOne = auth.currentUser.email
     let userTwo = secondUser.email
-    chatId = auth.currentUser.uid + secondUser.user_id
+    let chatIdgenerator = auth.currentUser.uid + secondUser.user_id
+    chatId = chatIdgenerator.split('').sort().join('') ; 
     chatExists(chatId).then((exists) => {
-        if (exists === true) { }
+        if (exists === true) {}
         else {
             set(ref(database, 'chats/' + chatId), {
                 firstUser: userOne,
@@ -177,23 +181,25 @@ function createChat(secondUser) {
             alert("NEW CHAT STARTED")
         }
     });
+    document.getElementById('new-message-field').style.display = "block"
     document.getElementById("chat-area").style.display = ""
     currentChat = chatId;
     const conversationRef = ref(database, 'chats/' + currentChat + "/messages")
     onValue(conversationRef, (snapshot)=> {
         const coversationHistory = snapshot.val();
-        for (const chatId in coversationHistory){
-            const messages = coversationHistory[chatId];
-            const chatList = document.getElementById('chat-list');
+        const chatList = document.getElementById('chat-list');
+        chatList.innerHTML = '';
+        for (const messageId in coversationHistory){
+            const messages = coversationHistory[messageId];
+            const messageDiv = document.createElement('div');
             const messageItems = document.createElement('li');
-            chatList.appendChild(messageItems)
+            messageDiv.appendChild(messageItems);
+            chatList.appendChild(messageDiv);
             messageItems.textContent = messages.content
             if(messages.sender == currentUser){
-                messageItems.style.color = "red"
-            }
+                messageDiv.classList.add("sent-message");
+            } else {messageDiv.classList.add("received-message");}
         }
-        let messagesContainer = document.getElementById('messages');
-        console.log(coversationHistory)
     })
 }
 
@@ -206,9 +212,11 @@ function newMessage(){
         content: contentTest,
         send_time: Date.now()
     });
-    alert("NEW message generated")
 }
 
 let messageButton = document.getElementById('generate-message')
-messageButton.addEventListener('click', function(){newMessage()})
+messageButton.addEventListener('click', function(event){
+    event.preventDefault();
+    newMessage();
+    document.getElementById("text-description").value = "";})
 
