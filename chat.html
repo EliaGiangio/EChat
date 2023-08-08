@@ -12,22 +12,17 @@
 </head>
 
 <body>
-    <div id="registration">
-        <form id="registration-form">
-            <label for="email">Email</label>
-            <input type="text" id="new-email-field" name="new-email-field" required>
-            <label for="password">Password</label>
-            <input type="password" id="new-password-field" name="new-password-field" required>
-            <button type="submit" id="submitData" name="submitData">Register</button>
-        </form>
-    </div>
     <div id="login">
         <form id="login-form">
             <label for="email">Email</label>
             <input type="text" id="email-field" name="email-field" required>
             <label for="password">Password</label>
             <input type="password" id="password-field" name="password-field" required>
-            <button type="submit" id="loginUser" name="loginUser">LogIn</button>
+            <div id="form-buttons">
+                <button type="submit" id="loginUser" name="loginUser">LogIn</button>
+                <button type="submit" id="submitData" name="submitData">Register</button>
+            </div>
+
         </form>
     </div>
     <div id="current-user">
@@ -46,11 +41,16 @@
                 </form>
             </div>
         </div>
-    </div>
-    <div>
-        <button id="signOutButton" name="signOutButton">Sign out</button>
+        <div>
+            <button id="signOutButton" name="signOutButton">Sign out</button>
+        </div>
     </div>
 
+    <div style="display: none;">
+        <a href="https://www.freepik.com/free-vector/abstract-neon-lights-background-design_9694001.htm#query=synthwave&position=1&from_view=search&track=sph#position=1&query=synthwave">Image by pikisuperstar</a> on Freepik
+        Image by <a href="https://www.freepik.com/free-vector/retro-futuristic-landscape-background-with-palm-trees_5416973.htm#query=80s%20synthwave%20retrowave&position=1&from_view=keyword&track=ais">Freepik</a>
+        <a href="https://www.freepik.com/free-vector/neon-grid-background_4394259.htm#query=synthwave&position=4&from_view=keyword&track=sph">Image by rawpixel.com</a> on Freepik
+    </div>
     <script type="module" src="chat.js"></script>
 </body>
 

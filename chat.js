@@ -48,8 +48,8 @@ function validate_password(input) {
 //sign up function
 submitData.addEventListener('click', (event) => {
     event.preventDefault(); //this is used to prevent the "Submit" action to have it's normal behaviour and redirect to the url with the credentials inserted
-    const email = document.getElementById('new-email-field').value;
-    const password = document.getElementById('new-password-field').value;
+    const email = document.getElementById('email-field').value;
+    const password = document.getElementById('password-field').value;
     if (validate_email(email) == false || validate_password(password) == false) {
         alert("Wrong credentials. Make sure that the email is correct and the password is longer than 6 characters")
     } else {
@@ -64,7 +64,7 @@ submitData.addEventListener('click', (event) => {
                     last_login: Date.now()
                 });
                 alert("User created correctly")
-                document.getElementById("registration").style.display = "none"
+                document.getElementById("login").style.display = "none"
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -111,12 +111,10 @@ auth.onAuthStateChanged((user) => {
     if (user) {
         currentUser = user.email
         document.getElementById("current-user").style.display = ""
-        document.getElementById("registration").style.display = "none"
         document.getElementById("login").style.display = "none"
         console.log(currentUser + " is logged in");
     } else {
         document.getElementById("current-user").style.display = "none"
-        document.getElementById("registration").style.display = ""
         document.getElementById("login").style.display = ""
         console.log("User is logged out");
     }
