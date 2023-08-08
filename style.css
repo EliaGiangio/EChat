@@ -1,0 +1,46 @@
+body{
+    font-family: 'Helvetica', 'Arial', sans-serif;
+}
+#current-user{
+    display: flex;
+    justify-content: space-evenly;
+}
+#chat-area{
+    background-color:azure;
+    width: 50vw;
+    height: 50vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+#new-message-field{
+    background-color: aliceblue;
+    padding: 20px;
+    display: none;
+}
+#new-message-field form{
+    display: flex;
+    justify-content: center;
+}
+#text-description{
+    width: 80%;
+    height: 24px;
+}
+
+.sent-message{
+    background-color: #25D366;
+    box-shadow: 0.5px 1px 1px grey;
+    width: 15%;
+    border-radius: 12px;
+    padding: 10px;
+    margin-bottom: 5px;
+    margin-left: 80%;
+}
+.received-message{
+    background-color: #fcfcfc;
+    box-shadow: 0.5px 1px 1px grey;
+    width: 15%;
+    border-radius: 12px;
+    padding: 10px;
+    margin-bottom: 5px;
+}
