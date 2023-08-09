@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="./style.css">
 </head>
 
-<body>
+<body style="overflow: hidden;">
     <div id="login">
         <form id="login-form">
             <label for="email">Email</label>
@@ -37,11 +37,20 @@
                 <form>
                     <input type="text" id="text-description" name="text-description" required><br>
                     <button id="generate-message" style="font-weight: bolder;
-                    width: 30px;" >></button>
+                    width: 40px;" >></button>
                 </form>
             </div>
         </div>
-        <div>
+        <div id="details">
+            <div id="user-details">
+                <h2 id="displayed-username"></h2>
+                <h3 id="displayed-email"></h3>
+            </div>
+            <form id="username-form">
+                <label for="new-username">Change username</label>
+                <input type="text" id="new-username" name="new-username" max="9"><br>
+                <button id="new-username-button" name="new-username-button"  >Update</button>
+            </form>
             <button id="signOutButton" name="signOutButton">Sign out</button>
         </div>
     </div>
