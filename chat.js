@@ -48,8 +48,8 @@ function validate_password(input) {
 //sign up function
 submitData.addEventListener('click', (event) => {
     event.preventDefault(); //this is used to prevent the "Submit" action to have it's normal behaviour and redirect to the url with the credentials inserted
-    const email = document.getElementById('new-email-field').value;
-    const password = document.getElementById('new-password-field').value;
+    const email = document.getElementById('email-field').value;
+    const password = document.getElementById('password-field').value;
     if (validate_email(email) == false || validate_password(password) == false) {
         alert("Wrong credentials. Make sure that the email is correct and the password is longer than 6 characters")
     } else {
@@ -61,10 +61,11 @@ submitData.addEventListener('click', (event) => {
                     email: email,
                     password: password,
                     chatId: Math.random().toString(36).slice(2),
-                    last_login: Date.now()
+                    last_login: Date.now(),
+                    username: email
                 });
                 alert("User created correctly")
-                document.getElementById("registration").style.display = "none"
+                document.getElementById("login").style.display = "none"
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -106,48 +107,83 @@ signOutButton.addEventListener('click', (event) => {
 })
 
 
-
+//display content based on login status
 auth.onAuthStateChanged((user) => {
     if (user) {
         currentUser = user.email
         document.getElementById("current-user").style.display = ""
-        document.getElementById("registration").style.display = "none"
         document.getElementById("login").style.display = "none"
-        console.log(currentUser + " is logged in");
+        get(ref(database, 'users/' + user.uid))
+            .then((snapshot) => {
+                const currentUserData = snapshot.val();
+                if (currentUserData) {
+                    document.getElementById('displayed-username').textContent = currentUserData.username;
+                    document.getElementById('displayed-email').textContent = currentUserData.email;
+                } 
+            })
     } else {
         document.getElementById("current-user").style.display = "none"
-        document.getElementById("registration").style.display = ""
         document.getElementById("login").style.display = ""
-        console.log("User is logged out");
     }
 });
 
+//Add username function
+function addUserName() {
+    const userName = document.getElementById('new-username').value
+    update(ref(database, 'users/' + auth.currentUser.uid), {
+        username: userName
+    });
+}
+const updateUsernameButton = document.getElementById('new-username-button')
+updateUsernameButton.addEventListener('click', function (event) {
+    event.preventDefault();
+    addUserName()
+    location.reload()
+})
+
+function showEditSection(){
+    let form = document.getElementById('username-form')
+    if (form.style.visibility == "hidden"){
+    form.style.visibility = "visible"} else { form.style.visibility = "hidden"}
+}
+const editSectionButton = document.getElementById('open-edit-window')
+editSectionButton.addEventListener('click', function(){
+    showEditSection()
+})
 
 
-
+//Logic for users list overview when logged in
 onValue(usersRef, (snapshot) => {
     const userData = snapshot.val();
-    for (const usersId in userData){
+    for (const usersId in userData) {
         const otherUser = userData[usersId]
         let emailsList = document.createElement('li')
-        let emailName = document.createElement('button')
+        let emailName = document.createElement('div')
         if (otherUser.email != currentUser) {
-            emailName.textContent = otherUser.email
+            emailName.textContent = otherUser.username
         } else {
             emailsList.style.display = "none"
         }
         usersList.appendChild(emailsList)
         emailsList.appendChild(emailName)
         emailName.classList.add('user-chat')
-        emailName.addEventListener('click', function (event){
+        emailName.addEventListener('click', function (event) {
             event.preventDefault();
-            createChat(otherUser)});
+            createChat(otherUser);
+            resetEmailNameColors()
+            this.style.backgroundColor = "#a20ec0"
+        });
     }
 });
+function resetEmailNameColors() {
+    const emailNames = document.querySelectorAll('.user-chat');
+    emailNames.forEach(emailName => {
+        emailName.style.backgroundColor = "";
+    });
+}
 
 
-
-//here the in the secon line i use directly return because get is asynchronous 
+//here the in the second line I use directly return because "get" is asynchronous 
 function chatExists(chatNumber) {
     return get(chatsRef)
         .then((snapshot) => {
@@ -169,41 +205,38 @@ function createChat(secondUser) {
     let userOne = auth.currentUser.email
     let userTwo = secondUser.email
     let chatIdgenerator = auth.currentUser.uid + secondUser.user_id
-    chatId = chatIdgenerator.split('').sort().join('') ; 
+    chatId = chatIdgenerator.split('').sort().join('');
     chatExists(chatId).then((exists) => {
-        if (exists === true) {}
-        else {
+        if (exists == !true) {
             set(ref(database, 'chats/' + chatId), {
                 firstUser: userOne,
                 secondUser: userTwo,
                 messages: {}
-            });
-            alert("NEW CHAT STARTED")
-        }
+            }); }
     });
     document.getElementById('new-message-field').style.display = "block"
     document.getElementById("chat-area").style.display = ""
     currentChat = chatId;
     const conversationRef = ref(database, 'chats/' + currentChat + "/messages")
-    onValue(conversationRef, (snapshot)=> {
+    onValue(conversationRef, (snapshot) => {
         const coversationHistory = snapshot.val();
         const chatList = document.getElementById('chat-list');
         chatList.innerHTML = '';
-        for (const messageId in coversationHistory){
+        for (const messageId in coversationHistory) {
             const messages = coversationHistory[messageId];
             const messageDiv = document.createElement('div');
             const messageItems = document.createElement('li');
             messageDiv.appendChild(messageItems);
             chatList.appendChild(messageDiv);
             messageItems.textContent = messages.content
-            if(messages.sender == currentUser){
+            if (messages.sender == currentUser) {
                 messageDiv.classList.add("sent-message");
-            } else {messageDiv.classList.add("received-message");}
+            } else { messageDiv.classList.add("received-message"); }
         }
     })
 }
 
-function newMessage(){
+function newMessage() {
     let contentTest = document.getElementById("text-description").value
     let senderTest = auth.currentUser.email
     let messageId = Date.now()
@@ -213,10 +246,26 @@ function newMessage(){
         send_time: Date.now()
     });
 }
-
 let messageButton = document.getElementById('generate-message')
-messageButton.addEventListener('click', function(event){
+messageButton.addEventListener('click', function (event) {
     event.preventDefault();
     newMessage();
-    document.getElementById("text-description").value = "";})
+    document.getElementById("text-description").value = "";
+}
+)
 
+let groupButton = document.getElementById('groups-button')
+let chatsButton = document.getElementById('chats-button')
+groupButton.addEventListener('click', function(){
+    document.getElementById('groups-list').style.display = ""
+    document.getElementById('users-list').style.display = "none"
+    document.getElementById('group-creation').style.display = ""
+    document.getElementById('messages').style.display = "none"
+    document.getElementById('new-message-field').style.display = "none"
+})
+chatsButton.addEventListener('click', function(){
+    document.getElementById('groups-list').style.display = "none"
+    document.getElementById('users-list').style.display = ""
+    document.getElementById('group-creation').style.display = "none"
+    document.getElementById('messages').style.display = ""
+})

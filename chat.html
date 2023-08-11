@@ -11,30 +11,35 @@
     <link rel="stylesheet" href="./style.css">
 </head>
 
-<body>
-    <div id="registration">
-        <form id="registration-form">
-            <label for="email">Email</label>
-            <input type="text" id="new-email-field" name="new-email-field" required>
-            <label for="password">Password</label>
-            <input type="password" id="new-password-field" name="new-password-field" required>
-            <button type="submit" id="submitData" name="submitData">Register</button>
-        </form>
-    </div>
+<body style="overflow: hidden;">
     <div id="login">
         <form id="login-form">
             <label for="email">Email</label>
             <input type="text" id="email-field" name="email-field" required>
             <label for="password">Password</label>
             <input type="password" id="password-field" name="password-field" required>
-            <button type="submit" id="loginUser" name="loginUser">LogIn</button>
+            <div id="form-buttons">
+                <button type="submit" id="loginUser" name="loginUser">LogIn</button>
+                <button type="submit" id="submitData" name="submitData">Register</button>
+            </div>
+
         </form>
     </div>
     <div id="current-user">
         <div id="other-users-div">
+            <div id="other-users-buttons">
+                <button id="chats-button">CHATS</button>
+                <button id="groups-button">GROUPS</button>
+            </div>
+            <ul id="groups-list" style="list-style-type: none; display: none;"></ul>
             <ul id="users-list" style="list-style-type: none"></ul>
         </div>
         <div id="chat-area">
+            <div id="group-creation" style="display: none;">
+                <label for="new-group-label">Create a new Group</label>
+                <input type="text" name="new-group-name" id="new-group-name">
+                <button id="new-group-button" name="new-group-button">CREATE</button>
+            </div>
             <div id="messages">
                 <ul id="chat-list" style="list-style-type: none"></ul>
             </div>
@@ -42,15 +47,30 @@
                 <form>
                     <input type="text" id="text-description" name="text-description" required><br>
                     <button id="generate-message" style="font-weight: bolder;
-                    width: 30px;" >></button>
+                    width: 40px;" >></button>
                 </form>
             </div>
         </div>
-    </div>
-    <div>
-        <button id="signOutButton" name="signOutButton">Sign out</button>
+        <div id="details">
+            <div id="user-details">
+                <h2 id="displayed-username"></h2>
+                <h3 id="displayed-email"></h3>
+                <button id="open-edit-window">Edit credentials</button>
+            </div>
+            <form id="username-form" style="visibility: hidden;">
+                <label for="new-username">Change username</label>
+                <input type="text" id="new-username" name="new-username" minlength="1" maxlength="15"><br>
+                <button id="new-username-button" name="new-username-button">Update</button>
+            </form>
+            <button id="signOutButton" name="signOutButton">Sign out</button>
+        </div>
     </div>
 
+    <div style="display: none;">
+        <a href="https://www.freepik.com/free-vector/abstract-neon-lights-background-design_9694001.htm#query=synthwave&position=1&from_view=search&track=sph#position=1&query=synthwave">Image by pikisuperstar</a> on Freepik
+        Image by <a href="https://www.freepik.com/free-vector/retro-futuristic-landscape-background-with-palm-trees_5416973.htm#query=80s%20synthwave%20retrowave&position=1&from_view=keyword&track=ais">Freepik</a>
+        <a href="https://www.freepik.com/free-vector/neon-grid-background_4394259.htm#query=synthwave&position=4&from_view=keyword&track=sph">Image by rawpixel.com</a> on Freepik
+    </div>
     <script type="module" src="chat.js"></script>
 </body>
 

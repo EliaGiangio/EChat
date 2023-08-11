@@ -1,22 +1,147 @@
+@import 'https://fonts.googleapis.com/css?family=Damion|Work+Sans:900';
+/* Styling the scrollbar track */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Styling the scrollbar thumb (the draggable part) */
+::-webkit-scrollbar-thumb {
+  background-color: #a20ec0;
+  border-radius: 5px;
+}
+
+/* Styling the scrollbar track when hovered */
+::-webkit-scrollbar-track:hover {
+  background-color:hsla(0, 0%, 100%, 0.1)
+}
+
 body{
     font-family: 'Helvetica', 'Arial', sans-serif;
+    background-image: url("assets/login-bg.jpg");
+    background-size: 100%;
+    overflow: hidden;
+}
+
+#login{
+    width: 30%;
+    margin: auto;
+    margin-top: 10%;
+    
+}
+#login-form{
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    margin: auto;   
+    height: auto;
+    margin-top: 5%; 
+    border-radius: 5%;
+    background: hsla(0, 0%, 100%, 0.5);
+    box-shadow: 10px 8px 25px #a20ec0;
+}
+#login-form label{
+    text-align: center;
+    margin: 5%;
+    font-family: 'Work Sans', sans-serif;
+    font-size: 2vw;
+    
+}
+#login-form input{
+    width: 50%;
+    margin: auto;
+    border: none;
+    background-color: aliceblue;
+    padding: 15px;
+    border-radius: 15px;
+    font-family: 'Work Sans', sans-serif;
+}
+#form-buttons{
+    display: flex;
+    justify-content: center;
+    margin: 5%;
+}
+#form-buttons button{
+    background: rgba(0, 0, 0, 0.5);
+    border: 1.5px solid #a20ec0;
+    padding: 6% 10%;
+    font-family: 'Work Sans', sans-serif;
+    color: #a20ec0;
+}
+#form-buttons button:hover{
+    background: rgba(0, 0, 0, 1);
+}
+#loginUser{
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
+#submitData{
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
 }
 #current-user{
     display: flex;
     justify-content: space-evenly;
 }
+#other-users-div{
+    background: hsla(0, 0%, 100%, 0.5);
+    border-radius: 2px;
+    border: 3px solid;
+    box-shadow: 10px 8px 25px #a20ec0;
+    text-align: center;
+    width: 20%;
+}
+#other-users-div div{
+    background: rgba(0, 0, 0, 0.5);
+    border: 1.5px solid #a20ec0;
+    font-family: 'Work Sans', sans-serif;
+    color: black;
+    width: auto ;
+    padding: 10%;
+    white-space: nowrap;
+    text-shadow: 0.5px 0.5px 8px #fff;
+}
+#other-users-div div:hover{
+    background: #a20ec059;
+    border: 1.5px solid #a20ec059;
+    
+}
+#other-users-buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+#other-users-buttons button{
+    background: rgba(0, 0, 0, 0.5);
+    border: 1.5px solid #a20ec0;
+    padding: 6% 10%;
+    font-family: 'Work Sans', sans-serif;
+    color: #a20ec0;
+}
+#users-list{
+    padding: 0px;
+    margin-top: 0px;
+}
 #chat-area{
-    background-color:azure;
     width: 50vw;
     height: 50vw;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    background-color: #27023f;
+    border: 3px solid;
+    box-shadow: 10px 8px 25px #a20ec0;    
+}
+#messages{
+    border: 1.5px #3d373f solid;
+    background-color: #27023f;
+    overflow-y: scroll;
+    height:100%;
 }
 #new-message-field{
-    background-color: aliceblue;
     padding: 20px;
     display: none;
+    border: 1.5px #0675c5 solid;
+    background-color: #27023f;
 }
 #new-message-field form{
     display: flex;
@@ -25,22 +150,122 @@ body{
 #text-description{
     width: 80%;
     height: 24px;
+    background-color: #27023f;
+    background: hsla(0, 0%, 100%, 0.1);
+    padding: 5px;
+    border-radius: 15px;
+    color: #fcfcfc;
 }
+#generate-message{
+    font-weight: bolder;
+    width: 9%;
+    border-radius: 20px;
+    background: hsla(0, 0%, 80%, 0.2);
+    color: #a20ec0;
+    font-size: larger;
+    margin-left:1%;
 
+}
 .sent-message{
-    background-color: #25D366;
+    background-color: #7E5AAD;
+    color: #fff;
     box-shadow: 0.5px 1px 1px grey;
     width: 15%;
     border-radius: 12px;
     padding: 10px;
     margin-bottom: 5px;
     margin-left: 80%;
+    overflow-wrap: break-word;
 }
 .received-message{
-    background-color: #fcfcfc;
+    background-color: #F0F0F0;
     box-shadow: 0.5px 1px 1px grey;
     width: 15%;
     border-radius: 12px;
     padding: 10px;
     margin-bottom: 5px;
+    overflow-wrap: break-word;
+}
+#details{
+    display: flex;
+    flex-direction: column;
+    width: 25%;
+}
+#user-details{
+    text-align: center;
+    font-family: 'Work Sans', sans-serif;
+    font-size: 1.5vw;
+    width: 100%;  
+    height: auto;
+    border-radius: 5%;
+    background: hsla(0, 0%, 100%, 0.5);
+    box-shadow: 10px 8px 25px #a20ec0;
+}
+#username-form{
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    margin: auto;   
+    height: auto;
+    margin-top: 5%; 
+    border-radius: 5%;
+    background: hsla(0, 0%, 100%, 0.5);
+    box-shadow: 10px 8px 25px #a20ec0;
+}
+#username-form label{
+    text-align: center;
+    margin: 5%;
+    font-family: 'Work Sans', sans-serif;
+    font-size: 1.5vw;
+    
+}
+#username-form input{
+    text-align: center;
+    width: 70%;
+    margin: auto;
+    border: none;
+    background-color: aliceblue;
+    padding: 10px;
+    border-radius: 15px;
+    font-family: 'Work Sans', sans-serif;
+}
+#new-username-button{
+    background: rgba(0, 0, 0, 0.5);
+    border: 1.5px solid #a20ec0;
+    padding: 3% 5%;
+    font-family: 'Work Sans', sans-serif;
+    color: #a20ec0;
+    border-radius: 15px;
+    width: 50%;
+    margin: auto;
+    margin-bottom: 3%;
+}
+#new-username-button:hover{
+    background: rgba(0, 0, 0, 1);
+}
+#open-edit-window{
+    background: rgba(0, 0, 0, 0.5);
+    border: 1.5px solid #a20ec0;
+    padding: 3% 5%;
+    font-family: 'Work Sans', sans-serif;
+    color: #a20ec0;
+    border-radius: 15px;
+    width: 50%;
+    margin: auto;
+    margin-bottom: 3%;
+}
+#open-edit-window:hover{
+    background: rgba(0, 0, 0, 1);
+}
+#signOutButton{
+    background: rgba(0, 0, 0, 0.5);
+    border: 1.5px solid #a20ec0;
+    padding: 6% 10%;
+    font-family: 'Work Sans', sans-serif;
+    color: #a20ec0;
+    width: 100%;
+    box-shadow: 5px 5px 15px #a20ec0;
+}
+#signOutButton:hover{
+    background: rgba(0, 0, 0, 1);
 }
