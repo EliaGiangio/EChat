@@ -27,9 +27,19 @@
     </div>
     <div id="current-user">
         <div id="other-users-div">
+            <div id="other-users-buttons">
+                <button id="chats-button">CHATS</button>
+                <button id="groups-button">GROUPS</button>
+            </div>
+            <ul id="groups-list" style="list-style-type: none; display: none;"></ul>
             <ul id="users-list" style="list-style-type: none"></ul>
         </div>
         <div id="chat-area">
+            <div id="group-creation" style="display: none;">
+                <label for="new-group-label">Create a new Group</label>
+                <input type="text" name="new-group-name" id="new-group-name">
+                <button id="new-group-button" name="new-group-button">CREATE</button>
+            </div>
             <div id="messages">
                 <ul id="chat-list" style="list-style-type: none"></ul>
             </div>
@@ -45,11 +55,12 @@
             <div id="user-details">
                 <h2 id="displayed-username"></h2>
                 <h3 id="displayed-email"></h3>
+                <button id="open-edit-window">Edit credentials</button>
             </div>
-            <form id="username-form">
+            <form id="username-form" style="visibility: hidden;">
                 <label for="new-username">Change username</label>
-                <input type="text" id="new-username" name="new-username" max="9"><br>
-                <button id="new-username-button" name="new-username-button"  >Update</button>
+                <input type="text" id="new-username" name="new-username" minlength="1" maxlength="15"><br>
+                <button id="new-username-button" name="new-username-button">Update</button>
             </form>
             <button id="signOutButton" name="signOutButton">Sign out</button>
         </div>

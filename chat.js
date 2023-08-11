@@ -138,6 +138,17 @@ const updateUsernameButton = document.getElementById('new-username-button')
 updateUsernameButton.addEventListener('click', function (event) {
     event.preventDefault();
     addUserName()
+    location.reload()
+})
+
+function showEditSection(){
+    let form = document.getElementById('username-form')
+    if (form.style.visibility == "hidden"){
+    form.style.visibility = "visible"} else { form.style.visibility = "hidden"}
+}
+const editSectionButton = document.getElementById('open-edit-window')
+editSectionButton.addEventListener('click', function(){
+    showEditSection()
 })
 
 
@@ -196,14 +207,12 @@ function createChat(secondUser) {
     let chatIdgenerator = auth.currentUser.uid + secondUser.user_id
     chatId = chatIdgenerator.split('').sort().join('');
     chatExists(chatId).then((exists) => {
-        if (exists === true) { }
-        else {
+        if (exists == !true) {
             set(ref(database, 'chats/' + chatId), {
                 firstUser: userOne,
                 secondUser: userTwo,
                 messages: {}
-            });
-        }
+            }); }
     });
     document.getElementById('new-message-field').style.display = "block"
     document.getElementById("chat-area").style.display = ""
@@ -237,7 +246,6 @@ function newMessage() {
         send_time: Date.now()
     });
 }
-
 let messageButton = document.getElementById('generate-message')
 messageButton.addEventListener('click', function (event) {
     event.preventDefault();
@@ -246,3 +254,18 @@ messageButton.addEventListener('click', function (event) {
 }
 )
 
+let groupButton = document.getElementById('groups-button')
+let chatsButton = document.getElementById('chats-button')
+groupButton.addEventListener('click', function(){
+    document.getElementById('groups-list').style.display = ""
+    document.getElementById('users-list').style.display = "none"
+    document.getElementById('group-creation').style.display = ""
+    document.getElementById('messages').style.display = "none"
+    document.getElementById('new-message-field').style.display = "none"
+})
+chatsButton.addEventListener('click', function(){
+    document.getElementById('groups-list').style.display = "none"
+    document.getElementById('users-list').style.display = ""
+    document.getElementById('group-creation').style.display = "none"
+    document.getElementById('messages').style.display = ""
+})
