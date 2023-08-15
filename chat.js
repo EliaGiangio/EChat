@@ -6,13 +6,13 @@ import { getDatabase, ref, set, update, child, get, onValue } from "https://www.
 
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDOKUWg1z411cPPFLuiSZds_aVV9yuV_YQ",
-    authDomain: "echat-9af12.firebaseapp.com",
-    projectId: "echat-9af12",
-    storageBucket: "echat-9af12.appspot.com",
-    messagingSenderId: "292846660790",
-    appId: "1:292846660790:web:15800535b3456f90888a17",
-    databaseURL: "https://echat-9af12-default-rtdb.europe-west1.firebasedatabase.app/"
+    apiKey: process.env.FIREBASE_API_KEY,
+    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.FIREBASE_APP_ID,
+    databaseURL: process.env.FIREBASE_DATABASE_URL,
 };
 
 // INITIALIZE AND VALIDATION
