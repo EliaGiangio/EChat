@@ -31,22 +31,32 @@
                 <button id="chats-button">CHATS</button>
                 <button id="groups-button">GROUPS</button>
             </div>
-            <ul id="groups-list" style="list-style-type: none; display: none;"></ul>
-            <ul id="users-list" style="list-style-type: none"></ul>
+            <ul id="groups-list" class="groups-interface-selected" style="list-style-type: none; display: none;"></ul>
+            <ul id="users-list" class="users-interface-selected" style="list-style-type: none"></ul>
         </div>
         <div id="chat-area">
-            <div id="group-creation" style="display: none;">
-                <label for="new-group-label">Create a new Group</label>
-                <input type="text" name="new-group-name" id="new-group-name">
-                <button id="new-group-button" name="new-group-button">CREATE</button>
+            <div id="group-creation" class="groups-interface-selected" style="display: none;">
+                <form id="new-group-form">
+                    <label for="new-group-label">Create a new Group</label>
+                    <h3 id="group-alert" style="display: none;">Group already exists!</h3>
+                    <input type="text" name="new-group-name" id="new-group-name" minlength="1" maxlength="15">
+                    <button id="new-group-button" name="new-group-button">CREATE</button>
+                </form>
             </div>
-            <div id="messages">
+            <div id="messages" class="users-interface-selected">
                 <ul id="chat-list" style="list-style-type: none"></ul>
             </div>
-            <div id="new-message-field">
+            <div id="new-message-field" class="message-fields users-interface-selected">
                 <form>
-                    <input type="text" id="text-description" name="text-description" required><br>
-                    <button id="generate-message" style="font-weight: bolder;
+                    <input type="text" id="text-description" class="description-fields" name="text-description" required><br>
+                    <button id="generate-message" class="send-buttons" style="font-weight: bolder;
+                    width: 40px;" >></button>
+                </form>
+            </div>
+            <div id="new-group-message-field" class="message-fields" style="display: none;">
+                <form>
+                    <input type="text" id="group-text-description" class="description-fields" name="group-text-description" required><br>
+                    <button id="generate-group-message" class="send-buttons" style="font-weight: bolder;
                     width: 40px;" >></button>
                 </form>
             </div>
