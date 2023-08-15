@@ -15,20 +15,19 @@ const firebaseConfig = {
     databaseURL: "https://echat-9af12-default-rtdb.europe-west1.firebasedatabase.app/"
 };
 
-// Initialize Firebase
+// INITIALIZE AND VALIDATION
 let currentUser;
 let currentChat;
 let chatId;
+let groupName;
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const database = getDatabase(app);
 const usersRef = ref(database, 'users');
 const chatsRef = ref(database, 'chats');
-let usersList = document.getElementById('users-list')
-
-
-
-
+const groupsRef = ref(database, 'groups');
+let usersList = document.getElementById('users-list');
+let groupsList = document.getElementById('groups-list')
 function validate_email(input) {
     var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     if (validRegex.test(input)) {
@@ -43,9 +42,7 @@ function validate_password(input) {
 
 }
 
-
-
-//sign up function
+//SIGN UP
 submitData.addEventListener('click', (event) => {
     event.preventDefault(); //this is used to prevent the "Submit" action to have it's normal behaviour and redirect to the url with the credentials inserted
     const email = document.getElementById('email-field').value;
@@ -75,7 +72,7 @@ submitData.addEventListener('click', (event) => {
     }
 });
 
-//login function
+//LOGIN/OUT LOGIC
 loginUser.addEventListener('click', (event) => {
     event.preventDefault();
     const email = document.getElementById('email-field').value;
@@ -95,8 +92,6 @@ loginUser.addEventListener('click', (event) => {
         });
 
 });
-
-
 signOutButton.addEventListener('click', (event) => {
     event.preventDefault();
     signOut(auth).then(() => {
@@ -119,7 +114,7 @@ auth.onAuthStateChanged((user) => {
                 if (currentUserData) {
                     document.getElementById('displayed-username').textContent = currentUserData.username;
                     document.getElementById('displayed-email').textContent = currentUserData.email;
-                } 
+                }
             })
     } else {
         document.getElementById("current-user").style.display = "none"
@@ -127,7 +122,7 @@ auth.onAuthStateChanged((user) => {
     }
 });
 
-//Add username function
+//ADD/MODIFY USERNAME
 function addUserName() {
     const userName = document.getElementById('new-username').value
     update(ref(database, 'users/' + auth.currentUser.uid), {
@@ -140,19 +135,19 @@ updateUsernameButton.addEventListener('click', function (event) {
     addUserName()
     location.reload()
 })
-
-function showEditSection(){
+function showEditSection() {
     let form = document.getElementById('username-form')
-    if (form.style.visibility == "hidden"){
-    form.style.visibility = "visible"} else { form.style.visibility = "hidden"}
+    if (form.style.visibility == "hidden") {
+        form.style.visibility = "visible"
+    } else { form.style.visibility = "hidden" }
 }
 const editSectionButton = document.getElementById('open-edit-window')
-editSectionButton.addEventListener('click', function(){
+editSectionButton.addEventListener('click', function () {
     showEditSection()
 })
 
 
-//Logic for users list overview when logged in
+//OTHER USERS OVERVIEW LOGIC
 onValue(usersRef, (snapshot) => {
     const userData = snapshot.val();
     for (const usersId in userData) {
@@ -166,7 +161,7 @@ onValue(usersRef, (snapshot) => {
         }
         usersList.appendChild(emailsList)
         emailsList.appendChild(emailName)
-        emailName.classList.add('user-chat')
+        emailName.classList.add('user-messages')
         emailName.addEventListener('click', function (event) {
             event.preventDefault();
             createChat(otherUser);
@@ -176,13 +171,13 @@ onValue(usersRef, (snapshot) => {
     }
 });
 function resetEmailNameColors() {
-    const emailNames = document.querySelectorAll('.user-chat');
+    const emailNames = document.querySelectorAll('.user-messages');
     emailNames.forEach(emailName => {
         emailName.style.backgroundColor = "";
     });
 }
 
-
+//1 on 1 CHAT LOGIC
 //here the in the second line I use directly return because "get" is asynchronous 
 function chatExists(chatNumber) {
     return get(chatsRef)
@@ -197,9 +192,6 @@ function chatExists(chatNumber) {
             console.error("Error fetching data:", error);
         });
 }
-
-
-
 function createChat(secondUser) {
     document.getElementById("chat-list").innerHTML = "";
     let userOne = auth.currentUser.email
@@ -212,7 +204,8 @@ function createChat(secondUser) {
                 firstUser: userOne,
                 secondUser: userTwo,
                 messages: {}
-            }); }
+            });
+        }
     });
     document.getElementById('new-message-field').style.display = "block"
     document.getElementById("chat-area").style.display = ""
@@ -236,36 +229,172 @@ function createChat(secondUser) {
     })
 }
 
-function newMessage() {
-    let contentTest = document.getElementById("text-description").value
-    let senderTest = auth.currentUser.email
-    let messageId = Date.now()
-    set(ref(database, 'chats/' + chatId + '/messages/' + messageId), {
-        sender: senderTest,
-        content: contentTest,
-        send_time: Date.now()
-    });
-}
 let messageButton = document.getElementById('generate-message')
 messageButton.addEventListener('click', function (event) {
     event.preventDefault();
-    newMessage();
+    newMessage('chat', currentChat);
     document.getElementById("text-description").value = "";
 }
 )
 
+function newMessage(chatType) {
+    let contentText;
+    let chatRef;
+    const senderText = auth.currentUser.email;
+    const messageId = Date.now();
+    if (chatType === 'chat') {
+        chatRef = ref(database, 'chats/' + chatId + '/messages/' + messageId);
+        contentText = document.getElementById("text-description").value;
+    } else if (chatType === 'group') {
+        chatRef = ref(database, 'groups/' + groupName + '/messages/' + messageId);
+        contentText = document.getElementById("group-text-description").value;
+    }
+    set(chatRef, {
+        sender: senderText,
+        content: contentText,
+        send_time: Date.now()
+    });
+}
+
+//GROUP LOGIC
 let groupButton = document.getElementById('groups-button')
 let chatsButton = document.getElementById('chats-button')
-groupButton.addEventListener('click', function(){
-    document.getElementById('groups-list').style.display = ""
-    document.getElementById('users-list').style.display = "none"
-    document.getElementById('group-creation').style.display = ""
-    document.getElementById('messages').style.display = "none"
-    document.getElementById('new-message-field').style.display = "none"
+const usersInterface = document.querySelectorAll('.users-interface-selected')
+const groupsInterface = document.querySelectorAll('.groups-interface-selected')
+groupButton.addEventListener('click', function () {
+    document.getElementById("chat-list").innerHTML = "";
+    groupsInterface.forEach(element => {
+        element.style.display = "";
+      });
+      usersInterface.forEach(element => {
+        element.style.display = "none";
+      });
+      groupButton.style.background= "#a20ec0";
+      groupButton.style.color= "black";
+      chatsButton.style.background= "";
+      chatsButton.style.color= "";
+    resetGroupsNameColors();
+    resetEmailNameColors();
 })
-chatsButton.addEventListener('click', function(){
-    document.getElementById('groups-list').style.display = "none"
-    document.getElementById('users-list').style.display = ""
-    document.getElementById('group-creation').style.display = "none"
-    document.getElementById('messages').style.display = ""
+chatsButton.addEventListener('click', function () {
+    document.getElementById("chat-list").innerHTML = "";
+    groupsInterface.forEach(element => {
+        element.style.display = "none";
+      });
+      usersInterface.forEach(element => {
+        element.style.display = "";
+      });
+      chatsButton.style.background= "#a20ec0";
+      chatsButton.style.color= "black";
+      groupButton.style.background= "";
+      groupButton.style.color= "";
+    resetGroupsNameColors();
+    resetEmailNameColors();
 })
+
+function groupExists(title) {
+    return get(groupsRef)
+        .then((snapshot) => {
+            if (snapshot.exists()) {
+                const groupsData = snapshot.val();
+                return title in groupsData;
+            }
+            return false;
+
+        })
+        .catch((error) => {
+            console.error("Error fetching data:", error);
+        });
+}
+
+function createGroup() {
+    let creator = auth.currentUser.email;
+    let groupTitle = document.getElementById('new-group-name').value;
+    let groupAlert = document.getElementById('group-alert')
+    groupExists(groupTitle).then((exists) => {
+        if (exists == !true) {
+            set(ref(database, 'groups/' + groupTitle), {
+                title: groupTitle,
+                creator: creator,
+                participants: {},
+                messages: {}
+            });
+        } else { groupAlert.style.display = ""; }
+    });
+}
+
+let groupCreation = document.getElementById('new-group-button')
+groupCreation.addEventListener('click', function (event) {
+    event.preventDefault();
+    createGroup()
+})
+
+
+onValue(groupsRef, (snapshot) => {
+    const groupsData = snapshot.val();
+    groupsList.innerHTML = '';
+    for (const groupTitle in groupsData) {
+        const allGroups = groupsData[groupTitle]
+        let groupsListItems = document.createElement('li')
+        let groupsName = document.createElement('div')
+        groupsName.textContent = allGroups.title
+        groupsList.appendChild(groupsListItems)
+        groupsListItems.appendChild(groupsName)
+        groupsName.classList.add('group-messages')
+        groupsName.addEventListener('click', function (event) {
+            groupName = groupsName.innerText
+            event.preventDefault();
+            document.getElementById('group-creation').style.display = "none"
+            document.getElementById('messages').style.display = ""
+            document.getElementById('new-group-message-field').style.display = "block"
+            enterGroup();
+            resetGroupsNameColors(this);
+            this.style.backgroundColor = "#a20ec0";
+        })
+        
+    }
+
+});
+function enterGroup() {
+    const groupRef = ref(database, 'groups/' + groupName + "/messages")
+    onValue(groupRef, (snapshot) => {
+        const coversationHistory = snapshot.val();
+        const chatList = document.getElementById('chat-list');
+        chatList.innerHTML = '';
+        for (const messageId in coversationHistory) {
+            const messages = coversationHistory[messageId];
+            const messageSender = document.createElement("p")
+            const messageDiv = document.createElement('div');
+            const messageItems = document.createElement('li');
+            messageDiv.appendChild(messageSender);
+            messageDiv.appendChild(messageItems);
+            chatList.appendChild(messageDiv);
+            messageItems.textContent = messages.content
+            if (messages.sender == currentUser) {
+                messageDiv.classList.add("sent-message");
+            } else { messageDiv.classList.add("received-message"); 
+            messageSender.textContent = messages.sender}
+        }
+    })
+};
+
+let groupMessageButton = document.getElementById('generate-group-message')
+groupMessageButton.addEventListener('click', function (event) {
+    event.preventDefault();
+    newMessage('group', groupName);
+    document.getElementById("group-text-description").value = "";
+}
+)
+
+function resetGroupsNameColors() {
+    const groupsNames = document.querySelectorAll('.group-messages');
+    groupsNames.forEach(groupsName => {
+        groupsName.style.backgroundColor = "";
+    });
+}
+
+
+
+
+
+
