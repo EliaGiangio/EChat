@@ -1,17 +1,14 @@
 @import 'https://fonts.googleapis.com/css?family=Damion|Work+Sans:900';
 
-/* Styling the scrollbar track */
 ::-webkit-scrollbar {
     width: 10px;
 }
 
-/* Styling the scrollbar thumb (the draggable part) */
 ::-webkit-scrollbar-thumb {
     background-color: #a20ec0;
     border-radius: 5px;
 }
 
-/* Styling the scrollbar track when hovered */
 ::-webkit-scrollbar-track:hover {
     background-color: hsla(0, 0%, 100%, 0.1)
 }
@@ -21,6 +18,16 @@ body {
     background-image: url("assets/login-bg.jpg");
     background-size: 100%;
     overflow: hidden;
+}
+
+.main-title {
+    text-align: center;
+    margin: 5%;
+    font-family: 'Work Sans', sans-serif;
+    font-size: 8vw;
+    color: #a20ec0;
+    text-shadow: 10px 8px 25px white;
+
 }
 
 #login {
@@ -133,7 +140,7 @@ body {
     margin-top: 0px;
 }
 
-#users-list li:hover{
+#users-list li:hover {
     background: #a20ec0;
 }
 
@@ -142,7 +149,7 @@ body {
     margin-top: 0px;
 }
 
-#groups-list li:hover{
+#groups-list li:hover {
     background: #a20ec0;
 }
 
@@ -164,9 +171,9 @@ body {
     height: 100%;
 }
 
-#messages p{
+#messages p {
     margin: 0;
-    margin-bottom:3% ;
+    margin-bottom: 3%;
     font-weight: bolder;
 }
 

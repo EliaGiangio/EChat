@@ -6,13 +6,13 @@ import { getDatabase, ref, set, update, child, get, onValue } from "https://www.
 
 
 const firebaseConfig = {
-    apiKey: process.env.FIREBASE_API_KEY,
-    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.FIREBASE_PROJECT_ID,
-    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.FIREBASE_APP_ID,
-    databaseURL: process.env.FIREBASE_DATABASE_URL,
+    apiKey: "AIzaSyDOKUWg1z411cPPFLuiSZds_aVV9yuV_YQ",
+    authDomain: "echat-9af12.firebaseapp.com",
+    projectId: "echat-9af12",
+    storageBucket: "echat-9af12.appspot.com",
+    messagingSenderId: "292846660790",
+    appId: "1:292846660790:web:15800535b3456f90888a17",
+    databaseURL: "https://echat-9af12-default-rtdb.europe-west1.firebasedatabase.app/"
 };
 
 // INITIALIZE AND VALIDATION
@@ -151,24 +151,27 @@ editSectionButton.addEventListener('click', function () {
 onValue(usersRef, (snapshot) => {
     const userData = snapshot.val();
     for (const usersId in userData) {
-        const otherUser = userData[usersId]
-        let emailsList = document.createElement('li')
-        let emailName = document.createElement('div')
+        const otherUser = userData[usersId];
+        let emailsList = document.createElement('li');
+        let emailName = document.createElement('div');
         if (otherUser.email != currentUser) {
-            emailName.textContent = otherUser.username
+            emailName.textContent = otherUser.username;
         } else {
-            emailsList.style.display = "none"
+            emailsList.style.display = "none";
         }
-        usersList.appendChild(emailsList)
-        emailsList.appendChild(emailName)
-        emailName.classList.add('user-messages')
+        usersList.appendChild(emailsList);
+        emailsList.appendChild(emailName);
+        if (!emailName.classList.contains('user-messages')) {
+            emailName.classList.add('user-messages');
+        }
         emailName.addEventListener('click', function (event) {
             event.preventDefault();
             createChat(otherUser);
-            resetEmailNameColors()
-            this.style.backgroundColor = "#a20ec0"
+            resetEmailNameColors();
+            this.style.backgroundColor = "#a20ec0";
         });
     }
+
 });
 function resetEmailNameColors() {
     const emailNames = document.querySelectorAll('.user-messages');
@@ -265,14 +268,14 @@ groupButton.addEventListener('click', function () {
     document.getElementById("chat-list").innerHTML = "";
     groupsInterface.forEach(element => {
         element.style.display = "";
-      });
-      usersInterface.forEach(element => {
+    });
+    usersInterface.forEach(element => {
         element.style.display = "none";
-      });
-      groupButton.style.background= "#a20ec0";
-      groupButton.style.color= "black";
-      chatsButton.style.background= "";
-      chatsButton.style.color= "";
+    });
+    groupButton.style.background = "#a20ec0";
+    groupButton.style.color = "black";
+    chatsButton.style.background = "";
+    chatsButton.style.color = "";
     resetGroupsNameColors();
     resetEmailNameColors();
 })
@@ -280,14 +283,14 @@ chatsButton.addEventListener('click', function () {
     document.getElementById("chat-list").innerHTML = "";
     groupsInterface.forEach(element => {
         element.style.display = "none";
-      });
-      usersInterface.forEach(element => {
+    });
+    usersInterface.forEach(element => {
         element.style.display = "";
-      });
-      chatsButton.style.background= "#a20ec0";
-      chatsButton.style.color= "black";
-      groupButton.style.background= "";
-      groupButton.style.color= "";
+    });
+    chatsButton.style.background = "#a20ec0";
+    chatsButton.style.color = "black";
+    groupButton.style.background = "";
+    groupButton.style.color = "";
     resetGroupsNameColors();
     resetEmailNameColors();
 })
@@ -351,7 +354,7 @@ onValue(groupsRef, (snapshot) => {
             resetGroupsNameColors(this);
             this.style.backgroundColor = "#a20ec0";
         })
-        
+
     }
 
 });
@@ -372,8 +375,10 @@ function enterGroup() {
             messageItems.textContent = messages.content
             if (messages.sender == currentUser) {
                 messageDiv.classList.add("sent-message");
-            } else { messageDiv.classList.add("received-message"); 
-            messageSender.textContent = messages.sender}
+            } else {
+                messageDiv.classList.add("received-message");
+                messageSender.textContent = messages.sender
+            }
         }
     })
 };
